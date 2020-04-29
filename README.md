@@ -19,12 +19,13 @@ pip install git+https://github.com/apachecn/BookerTrans
 ## 使用说明
 
 ```
-btrans [-h] [-v] [-H HOST] [-P PROXY] [-w WAIT_SEC] [-r RETRY]
-       [-s SRC] [-d DST]
+btrans [-h] [-v] [-H HOST] [-P PROXY] [-t TIMEOUT] [-w WAIT_SEC] 
+       [-r RETRY] [-s SRC] [-d DST]
        fname
        
 -H HOST: 域名，默认为 translate.google.com
 -P PROXY: 代理，格式为 \d+\.\d+\.\d+\.\d+:\d+，默认为空
+-t TIMEOUT: 超时时间，以秒为单位，默认为 8
 -w WAIT_SEC: 两次翻译之间的延迟（以秒为单位），默认为 0.5
 -r RETRY: 重试次数，默认为 10
 -s SRC: 源语言，默认为 auto

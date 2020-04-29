@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import os
 from os import path
 from argparse import ArgumentParser
 from . import trans_html, config, api, __version__
@@ -29,6 +30,7 @@ def main():
     parser.add_argument('-v', '--version', action="version", version=__version__)
     parser.add_argument('-H', '--host', default='translate.google.cn', help="host for google translator")
     parser.add_argument('-P', '--proxy', help=f'proxy with format \d+\.\d+\.\d+\.\d+:\d+ or empty')
+    parser.add_argument('-t', '--timeout', type=float, help=f'timeout in second')
     parser.add_argument('-w', '--wait-sec', type=float, default=0.5, help='delay in second between two times of translation')
     parser.add_argument('-r', '--retry', type=int, default=10, help='count of retrying')
     parser.add_argument('-s', '--src', default='auto', help='src language')
@@ -40,6 +42,7 @@ def main():
         args.proxy = {'http': p, 'https': p}
     api.host = args.host
     api.proxy = args.proxy
+    api.timeout = args.timeout
     config.wait_sec = args.wait_sec
     config.retry = args.retry
     config.src = args.src

@@ -16,6 +16,7 @@ class GoTransApi:
         self.tkk = None
         self.host = 'translate.google.cn'
         self.proxy = None
+        self.timeout = 8
     
     @staticmethod
     def _shr32(x, bits):
@@ -111,7 +112,8 @@ class GoTransApi:
             res = requests.get(
                 f'https://{self.host}/', 
                 headers=GoTransApi.headers, 
-                proxies=self.proxy
+                proxies=self.proxy,
+                timeout=self.timeout,
             ).text
             self.tkk = re.search(r"tkk:'(\d+\.\d+)", res).group(1)
         return self.tkk
@@ -125,7 +127,8 @@ class GoTransApi:
         res = requests.get(
             url, 
             headers=GoTransApi.headers, 
-            proxies=self.proxy
+            proxies=self.proxy,
+            timeout=self.timeout,
         ).text
         j = json.loads(res)
         trans = ' '.join([o[0] for o in j[0]])

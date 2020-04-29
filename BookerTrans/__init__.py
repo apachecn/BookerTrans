@@ -10,7 +10,7 @@ from . import config
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"
 __license__ = "SATA"
-__version__ = "2020.04.29"
+__version__ = "2020.04.29.1"
 
 RE_CODE = r'<(pre|code)[^>]*?>[\s\S]*?</\1>'
 RE_TAG = r'<[^>]*?>'
