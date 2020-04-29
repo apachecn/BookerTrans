@@ -25,11 +25,11 @@ btrans [-h] [-v] [-H HOST] [-P PROXY] [-w WAIT_SEC] [-r RETRY]
        
 -H HOST: 域名，默认为 translate.google.com
 -P PROXY: 代理，格式为 \d+\.\d+\.\d+\.\d+:\d+，默认为空
--w WAIT_SEC: 两次翻译之间的延迟（以秒为单位）
--r RETRY: 重试次数
+-w WAIT_SEC: 两次翻译之间的延迟（以秒为单位），默认为 0.5
+-r RETRY: 重试次数，默认为 10
 -s SRC: 源语言，默认为 auto
 -d DST: 目标语言，默认为 zh-CN
-fname: HTML 文件名称，文件所在的目录名称
+fname: HTML 文件名称，或者文件所在的目录名称
 ```
 
 ## 协议
