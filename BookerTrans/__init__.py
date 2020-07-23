@@ -10,7 +10,7 @@ from . import config
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"
 __license__ = "SATA"
-__version__ = "2020.07.22"
+__version__ = "2020.07.23"
 
 RE_CODE = r'<(pre|code)[^>]*?>[\s\S]*?</\1>'
 RE_TAG = r'<[^>]*?>'
@@ -96,6 +96,9 @@ def trans_one(html):
     return html
 
 def trans_html(html):
+    # 预处理
+    html = re.sub(r'<\?xml[^>]*\?>', '', html)
+    html = re.sub(r'xmlns=".+?"', '', html)
     html = process_code(html)
     root = pq(html)
     
