@@ -10,7 +10,7 @@ from . import config
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"
 __license__ = "SATA"
-__version__ = "2020.07.25"
+__version__ = "2020.07.25.1"
 
 RE_CODE = r'<(pre|code|tt|var|kbd)[^>]*?>[\s\S]*?</\1>'
 RE_TAG = r'<[^>]*?>'
@@ -81,7 +81,7 @@ def trans_real(src):
     return dst
 
 def trans_one(html):
-    if html.strip() == '':
+    if html is None or html.strip() == '':
         return ''
     
     # 标签预处理
