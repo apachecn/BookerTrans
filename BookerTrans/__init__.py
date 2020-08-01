@@ -10,7 +10,7 @@ from . import config
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"
 __license__ = "SATA"
-__version__ = "2020.07.25.1"
+__version__ = "2020.08.01"
 
 RE_CODE = r'<(pre|code|tt|var|kbd)[^>]*?>[\s\S]*?</\1>'
 RE_TAG = r'<[^>]*?>'
@@ -97,9 +97,7 @@ def trans_one(html):
 
 def trans_html(html):
     # 预处理
-    html = re.sub(r'<\?xml[^>]*\?>', '', html)
-    html = re.sub(r'xmlns=".+?"', '', html)
-    html = process_code(html)
+    html = preprocess(html)
     root = pq(html)
     
     # 处理 <p> <h?>
@@ -143,7 +141,12 @@ def trans_html(html):
     
     return str(root)
 
-def process_code(html):
+def preprocess(html):
+    html = re.sub(r'<\?xml[^>]*\?>', '', html)
+    html = re.sub(r'xmlns=".+?"', '', html)
+    html = html.replace('&#160;', ' ') \
+               .replace('&nbsp;', ' ')
+
     root = pq(html)
     
     pres = root('div.code, div.Code')

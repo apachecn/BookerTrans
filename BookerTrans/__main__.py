@@ -5,7 +5,9 @@ from os import path
 from argparse import ArgumentParser
 from . import trans_html, config, api, __version__
 
-is_html = lambda f: f.endswith('.html') or f.endswith('.htm')
+is_html = lambda f: f.endswith('.html') or \
+                    f.endswith('.htm') or \
+                    f.endswith('.xhtml')
 
 def process_file(fname):
     if not is_html(fname):
