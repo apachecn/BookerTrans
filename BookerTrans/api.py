@@ -108,6 +108,8 @@ class GoTransApi:
         return f"{a}.{a ^ b}"
         
     def get_tkk(self):
+        return '422392.71207223'
+        '''
         if not self.tkk: 
             res = requests.get(
                 f'https://{self.host}/', 
@@ -117,6 +119,7 @@ class GoTransApi:
             ).text
             self.tkk = re.search(r"tkk:'(\d+\.\d+)", res).group(1)
         return self.tkk
+        '''
 
     
     def translate(self, s, src='auto', dst='zh-CN'):
