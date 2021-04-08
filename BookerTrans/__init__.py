@@ -16,7 +16,14 @@ RE_CODE = r'<(pre|code|tt|var|kbd)[^>]*?>[\s\S]*?</\1>'
 RE_TAG = r'<[^>]*?>'
 RE_ENTITY = r'&(\w+|#x?\d+);'
 
-api = apis['google_selenium']()
+api = None
+
+def load_api(site):
+    global api
+    api = apis[site]
+    
+def get_api():
+    return api
 
 def tags_preprocess(html):
 

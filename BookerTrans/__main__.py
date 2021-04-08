@@ -3,7 +3,7 @@
 import os
 from os import path
 from argparse import ArgumentParser
-from . import trans_html, config, api, __version__
+from . import trans_html, config, api, __version__, load_api, get_api, apis
 
 is_html = lambda f: f.endswith('.html') or \
                     f.endswith('.htm') or \
@@ -28,6 +28,7 @@ def process_dir(dir):
 
 def main():
     parser = ArgumentParser(prog="BookerTrans", description="HTML Translator with Google Api for iBooker/ApacheCN")
+    parser.add_argument('site', help='translate api', choices=apis.keys())
     parser.add_argument('fname', help="html file name or dir name")
     parser.add_argument('-v', '--version', action="version", version=__version__)
     parser.add_argument('-H', '--host', default='translate.google.cn', help="host for google translator")
@@ -38,6 +39,9 @@ def main():
     parser.add_argument('-s', '--src', default='auto', help='src language')
     parser.add_argument('-d', '--dst', default='zh-CN', help='dest language')
     args = parser.parse_args()
+    
+    load_api(args.site)
+    api = get_api()
     
     if args.proxy:
         p = args.proxy
