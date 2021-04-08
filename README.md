@@ -16,12 +16,14 @@ pip install BookerTrans
 pip install git+https://github.com/apachecn/BookerTrans
 ```
 
+部分 API 依赖 Selenium 和 Chrome。请确保安装了 Chrome，并将其[驱动](http://npm.taobao.org/mirrors/chromedriver/)放到`PATH`下。
+
 ## 使用说明
 
 ```
 btrans [-h] [-v] [-H HOST] [-P PROXY] [-t TIMEOUT] [-w WAIT_SEC] 
        [-r RETRY] [-s SRC] [-d DST]
-       fname
+       site fname
        
 -H HOST: 域名，默认为 translate.google.com
 -P PROXY: 代理，格式为 \d+\.\d+\.\d+\.\d+:\d+，默认为空
@@ -30,6 +32,7 @@ btrans [-h] [-v] [-H HOST] [-P PROXY] [-t TIMEOUT] [-w WAIT_SEC]
 -r RETRY: 重试次数，默认为 10
 -s SRC: 源语言，默认为 auto
 -d DST: 目标语言，默认为 zh-CN
+site: API 名称，可选项为 {google,google_selenium,baidu,sogou,youdao}
 fname: HTML 文件名称，或者文件所在的目录名称
 ```
 
