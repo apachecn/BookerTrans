@@ -84,7 +84,7 @@ def trans_real(src):
     if not dst: return None
     
     # 修复占位符
-    dst = re.sub(r'\[\s*(?:htg|HTG)\s*(\d+)\s*\]', r'[HTG\1]', dst)
+    dst = re.sub(r'\[\s*(?:htg|HTG)\s*(\d+)号?\s*\]', r'[HTG\1]', dst)
     return dst
 
 def trans_one(html):
