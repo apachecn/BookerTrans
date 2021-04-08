@@ -75,8 +75,8 @@ def trans_real(src):
                 dst=config.dst
             )
             print(dst)
-            if dst: break
             time.sleep(config.wait_sec)
+            if dst: break
         except Exception as ex:
             print(ex)
             time.sleep(config.wait_sec)
