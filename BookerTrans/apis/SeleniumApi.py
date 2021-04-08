@@ -7,7 +7,6 @@ class SeleniumApi:
 
     def get_settings(self):
         return {
-            'default_url': '',
             'url_temp': '',
             'src_text': '',
             'dst_text': '',
@@ -19,7 +18,9 @@ class SeleniumApi:
         options.add_argument('--disable-gpu')
         options.add_argument('--log-level=3')
         self._driver = webdriver.Chrome(options=options)
-        self._driver.get(self.get_settings()['default_url'])
+        self._driver.get(self.get_settings()['url_temp']
+            .replace('{src}', 'auto')
+            .replace('{dst}', 'zh-CN'))
         self._lang = ('auto', 'zh-CN')
 
     def translate(self, s, src='auto', dst='zh-CN'):
