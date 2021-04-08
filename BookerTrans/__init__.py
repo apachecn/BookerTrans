@@ -4,7 +4,7 @@ import re
 import time
 from os import path
 from pyquery import PyQuery as pq
-from .api import GoTransApi
+from .apis import apis
 from . import config
 
 __author__ = "ApacheCN"
@@ -16,7 +16,7 @@ RE_CODE = r'<(pre|code|tt|var|kbd)[^>]*?>[\s\S]*?</\1>'
 RE_TAG = r'<[^>]*?>'
 RE_ENTITY = r'&(\w+|#x?\d+);'
 
-api = GoTransApi()
+api = apis['google_selenium']()
 
 def tags_preprocess(html):
 
