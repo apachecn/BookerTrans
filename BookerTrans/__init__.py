@@ -20,7 +20,7 @@ api = None
 
 def load_api(site):
     global api
-    api = apis[site]
+    api = apis[site]()
     
 def get_api():
     return api
