@@ -7,7 +7,7 @@ class GoTransSeleniumApi:
 
     def __init__(self):
         options = Options()
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument('--log-level=3')
         self._driver = webdriver.Chrome(options=options)
@@ -24,7 +24,7 @@ class GoTransSeleniumApi:
         text_dummy.clear()
         text_dummy.send_keys(s)
         time.sleep(1)
-        text_translation = self._driver.find_element_by_xpath('/html/body/c-wiz/div/div[2]/c-wiz/div[2]/c-wiz/div[1]/div[2]/div[2]/c-wiz[2]/div[5]/div/div[1]/span[1]/span/span')
+        text_translation = self._driver.find_element_by_xpath('/html/body/c-wiz/div/div[2]/c-wiz/div[2]/c-wiz/div[1]/div[2]/div[2]/c-wiz[2]/div[5]/div/div[1]/span[1]')
         # 返回翻译结果
         return text_translation.text
 
