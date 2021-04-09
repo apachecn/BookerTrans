@@ -55,4 +55,5 @@ setuptools.setup(
         ],
     },
     packages=setuptools.find_packages(),
+    package_data={'': ['*']},
 )

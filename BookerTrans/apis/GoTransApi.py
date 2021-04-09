@@ -4,7 +4,6 @@ import os
 import json
 from urllib.parse import quote
 import sys
-from .. import config
 
 class GoTransApi:
 
