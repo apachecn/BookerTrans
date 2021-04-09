@@ -40,7 +40,7 @@ def tags_preprocess(html):
         s = m.group()
         tags.append(s)
         idx = len(tags) - 1
-        tk = f' [HTG{idx}] '
+        tk = f'\x20【{idx}】\x20'
         return tk
         
     # 移除 <pre|code>
@@ -59,7 +59,7 @@ def tags_recover(html, tags):
 
     # 还原标签
     for i, t in enumerate(tags):
-        html = html.replace(f'[HTG{i}]', t)
+        html = html.replace(f'【{i}】', t)
         
     return html
 
@@ -84,7 +84,7 @@ def trans_real(src):
     if not dst: return None
     
     # 修复占位符
-    dst = re.sub(r'\[\s*(?:htg|HTG)\s*(\d+)号?\s*\]', r'[HTG\1]', dst)
+    dst = re.sub(r'【\s*(\d+)\s*】', r'【\1】', dst)
     return dst
 
 def trans_one(html):
