@@ -34,7 +34,7 @@ def main():
     parser.add_argument('-H', '--host', default='translate.google.cn', help="host for google translator")
     parser.add_argument('-P', '--proxy', help=f'proxy with format \d+\.\d+\.\d+\.\d+:\d+ or empty')
     parser.add_argument('-t', '--timeout', type=float, help=f'timeout in second')
-    parser.add_argument('-w', '--wait-sec', type=float, default=0.5, help='delay in second between two times of translation')
+    parser.add_argument('-w', '--wait-sec', type=float, default=1.5, help='delay in second between two times of translation')
     parser.add_argument('-r', '--retry', type=int, default=10, help='count of retrying')
     parser.add_argument('-s', '--src', default='auto', help='src language')
     parser.add_argument('-d', '--dst', default='zh-CN', help='dest language')
