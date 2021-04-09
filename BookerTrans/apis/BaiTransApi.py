@@ -36,6 +36,8 @@ class BaiTransApi:
         return self._js.call("e", s)
 
     def translate(self, s, src='en', dst='zh'):
+        if src == 'auto': src = 'en'
+        if dst == 'zh-CN': dst = 'zh'
         data = {
             "from": src,
             "to": dst,
