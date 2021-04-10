@@ -10,7 +10,7 @@ from . import config
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"
 __license__ = "SATA"
-__version__ = "2021.4.9.1"
+__version__ = "2021.4.9.2"
 
 RE_CODE = r'<(pre|code|tt|var|kbd)[^>]*?>[\s\S]*?</\1>'
 RE_TAG = r'<[^>]*?>'
@@ -40,7 +40,7 @@ def tags_preprocess(html):
         s = m.group()
         tags.append(s)
         idx = len(tags) - 1
-        tk = f'\x20【{idx}】\x20'
+        tk = f'\x20【T{idx}】\x20'
         return tk
         
     # 移除 <pre|code>
@@ -59,7 +59,7 @@ def tags_recover(html, tags):
 
     # 还原标签
     for i, t in enumerate(tags):
-        html = html.replace(f'【{i}】', t)
+        html = html.replace(f'【T{i}】', t)
         
     return html
 
@@ -84,7 +84,7 @@ def trans_real(src):
     if not dst: return None
     
     # 修复占位符
-    dst = re.sub(r'【\s*(\d+)\s*】', r'【\1】', dst)
+    dst = re.sub(r'【\s*T\s*(\d+)\s*】', r'【T\1】', dst, flags=re.I)
     return dst
 
 def trans_one(html):
