@@ -15,6 +15,7 @@ class SeleniumApi:
             'url_temp': '',
             'src_sel': '',
             'dst_sel': '',
+            'dst_attr': 'innerText',
         }
 
     def load_page(self, src='auto', dst='zh-CN'):
@@ -56,7 +57,7 @@ class SeleniumApi:
             .until(self.wait_trans_callback)
         el_dst = self._driver \
             .find_element_by_css_selector(settings['dst_sel'])
-        return el_dst.get_attribute('innerText')
+        return el_dst.get_attribute(settings['dst_attr'])
 
     def __del__(self):
         self._driver.close()
