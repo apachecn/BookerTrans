@@ -56,7 +56,7 @@ class SeleniumApi:
             .until(self.wait_trans_callback)
         el_dst = self._driver \
             .find_element_by_css_selector(settings['dst_text'])
-        return el_dst.text
+        return el_dst.get_attribute('innerText')
 
     def __del__(self):
         self._driver.close()
