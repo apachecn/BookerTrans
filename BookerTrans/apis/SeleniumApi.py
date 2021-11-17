@@ -7,12 +7,13 @@ import re
 
 class SeleniumApi:
 
+    WAIT_SEC = 10000000
+    
     def get_settings(self):
         return {
             'url_temp': '',
             'src_text': '',
             'dst_text': '',
-            'wait_sec': 10000000,
         }
 
     def load_page(self, src='auto', dst='zh-CN'):
@@ -20,7 +21,7 @@ class SeleniumApi:
         self._driver.get(settings['url_temp']
             .replace('{src}', src)
             .replace('{dst}', dst))
-        self._driver.implicitly_wait(settings['wait_sec'])
+        self._driver.implicitly_wait(SeleniumApi.WAIT_SEC)
         self._lang = (src, dst)
         
     def __init__(self):
@@ -31,8 +32,7 @@ class SeleniumApi:
         self._driver = webdriver.Chrome(options=options)
         self.load_page('auto', 'zh-CN')
 
-    @staticmethod
-    def wait_trans_callback(dvr):
+    def wait_trans_callback(self, dvr):
         settings = self.get_settings()
         el_dst = dvr.find_element_by_css_selector(settings['dst_text'])
         return el_dst is not None and el_dst.text != ""
@@ -45,11 +45,11 @@ class SeleniumApi:
         el_src = self._driver \
             .find_element_by_css_selector(settings['src_text'])
         el_src.clear()
-        WebDriverWait(driver, settings['wait_sec']) \
-            .until(lambda x: not SeleniumApi.wait_trans_callback(x))
+        WebDriverWait(self._driver, SeleniumApi.WAIT_SEC) \
+            .until(lambda x: not self.wait_trans_callback(x))
         el_src.send_keys(s)
-        WebDriverWait(driver, settings['wait_sec']) \
-            .until(SeleniumApi.wait_trans_callback)
+        WebDriverWait(self._driver, SeleniumApi.WAIT_SEC) \
+            .until(self.wait_trans_callback)
         el_dst = self._driver \
             .find_element_by_css_selector(settings['dst_text'])
         return el_dst.text
