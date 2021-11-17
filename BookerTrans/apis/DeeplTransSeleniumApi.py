@@ -12,8 +12,8 @@ class DeeplTransSeleniumApi(SeleniumApi):
             'url_temp': 'https://www.deepl.com/translator#{src}/{dst}/',
             'src_sel': '.lmt__source_textarea',
             'src_attr': 'value',
-            'dst_sel': '#target-dummydiv',
-            'dst_attr': 'innerHTML',
+            'dst_sel': '.lmt__target_textarea',
+            'dst_attr': 'value',
         }
 
 def main():

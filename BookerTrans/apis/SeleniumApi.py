@@ -38,8 +38,11 @@ class SeleniumApi:
 
     def wait_trans_callback(self, dvr):
         settings = self.get_settings()
-        el_dst = dvr.find_elements_by_css_selector(settings['dst_sel'])
-        return len(el_dst) != 0 and el_dst[0].text != ""
+        res = self._driver.execute_script('''
+            var el_dst = document.querySelector(arguments[0])
+            return el_dst && el_dst[arguments[1]] != ""
+        ''', settings['dst_sel'], settings['dst_attr'])
+        return res
 
     def translate(self, s, src='auto', dst='zh-CN'):
         if re.search(r'^\s*$', s): return ""
