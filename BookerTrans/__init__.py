@@ -5,7 +5,7 @@ import time
 from os import path
 from pyquery import PyQuery as pq
 from .apis import apis
-from . import config
+from .config import config
 import traceback
 
 __author__ = "ApacheCN"
@@ -67,20 +67,20 @@ def tags_recover(html, tags):
 def trans_real(src):
 
     dst = None
-    for i in range(config.retry):
+    for i in range(config['retry']):
         try:
             print(src)
             dst = api.translate(
                 src, 
-                src=config.src, 
-                dst=config.dst
+                src=config['src'], 
+                dst=config['dst'],
             )
             print(dst)
-            time.sleep(config.wait_sec)
+            time.sleep(config['wait_sec'])
             if dst: break
         except Exception as ex:
             traceback.print_exc()
-            time.sleep(config.wait_sec)
+            time.sleep(config['wait_sec'])
     
     if not dst: return None
     
