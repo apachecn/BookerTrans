@@ -33,6 +33,7 @@ class SeleniumApi:
 
     @staticmethod
     def wait_trans_callback(dvr):
+        settings = self.get_settings()
         el_dst = dvr.find_element_by_css_selector(settings['dst_text'])
         return el_dst is not None and el_dst.text != ""
 
