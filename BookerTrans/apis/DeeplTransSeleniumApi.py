@@ -10,8 +10,8 @@ class DeeplTransSeleniumApi(SeleniumApi):
         return {
             'default_url': 'https://www.deepl.com/translator#en/zh-CN/',
             'url_temp': 'https://www.deepl.com/translator#{src}/{dst}/',
-            'src_text': '.lmt__source_textarea',
-            'dst_text': '#target-dummydiv',
+            'src_sel': '.lmt__source_textarea',
+            'dst_sel': '#target-dummydiv',
         }
 
 def main():

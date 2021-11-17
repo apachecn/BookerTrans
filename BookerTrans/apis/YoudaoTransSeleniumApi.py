@@ -9,8 +9,8 @@ class YoudaoTransSeleniumApi(SeleniumApi):
     def get_settings(self):
         return {
             'url_temp': 'http://fanyi.youdao.com/',
-            'src_text': '#inputOriginal',
-            'dst_text': '#transTarget',
+            'src_sel': '#inputOriginal',
+            'dst_sel': '#transTarget',
         }
 
 def main():

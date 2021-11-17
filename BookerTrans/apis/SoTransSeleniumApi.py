@@ -9,8 +9,8 @@ class SoTransSeleniumApi(SeleniumApi):
     def get_settings(self):
         return {
             'url_temp': 'https://fanyi.sogou.com/text?transfrom={src}&transto={dst}',
-            'src_text': '#trans-input',
-            'dst_text': '#trans-result',
+            'src_sel': '#trans-input',
+            'dst_sel': '#trans-result',
         }
 
 def main():

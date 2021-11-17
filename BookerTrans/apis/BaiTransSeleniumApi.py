@@ -10,8 +10,8 @@ class BaiTransSeleniumApi(SeleniumApi):
         return {
             'default_url': 'https://fanyi.baidu.com/#auto/zh-CN',
             'url_temp': 'https://fanyi.baidu.com/#{src}/{dst}',
-            'src_text': 'textarea.textarea',
-            'dst_text': 'p.target-output',
+            'src_sel': 'textarea.textarea',
+            'dst_sel': 'p.target-output',
         }
 
 def main():
