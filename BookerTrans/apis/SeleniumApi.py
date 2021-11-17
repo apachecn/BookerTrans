@@ -13,7 +13,6 @@ class SeleniumApi:
             'src_text': '',
             'dst_text': '',
             'wait_sec': 10000000,
-            'check_sec': 0.1,
         }
 
     def load_page(self, src='auto', dst='zh-CN'):
