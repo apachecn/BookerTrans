@@ -15,6 +15,11 @@ class DeeplTransSeleniumApi(SeleniumApi):
             'dst_sel': '.lmt__target_textarea',
             'dst_attr': 'value',
         }
+        
+    def translate(self, s, src='en', dst='zh'):
+        if src == 'auto': src = 'en'
+        if dst == 'zh-CN': dst = 'zh'
+        return SeleniumApi.translate(self, s, src, dst)
 
 def main():
     api = DeeplTransSeleniumApi()
