@@ -5,6 +5,7 @@ from .SoTransSeleniumApi import SoTransSeleniumApi
 from .YoudaoTransSeleniumApi import YoudaoTransSeleniumApi
 from .BaiTransApi import BaiTransApi
 from .YoudaoTransApi import YoudaoTransApi
+from .DeeplTransSeleniumApi import DeeplTransSeleniumApi
 
 apis = {
     'google': GoTransApi,
@@ -14,4 +15,5 @@ apis = {
     'sogou': SoTransSeleniumApi,
     'youdao': YoudaoTransApi,
     'youdao_selenium': YoudaoTransSeleniumApi,
+    'deepl': DeeplTransSeleniumApi,
 }
