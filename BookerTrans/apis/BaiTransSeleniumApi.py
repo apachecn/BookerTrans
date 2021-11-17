@@ -12,6 +12,7 @@ class BaiTransSeleniumApi(SeleniumApi):
             'url_temp': 'https://fanyi.baidu.com/#{src}/{dst}',
             'src_sel': 'textarea.textarea',
             'dst_sel': 'p.target-output',
+            'dst_attr': 'innerText',
         }
 
 def main():

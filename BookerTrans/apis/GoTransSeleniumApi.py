@@ -12,6 +12,7 @@ class GoTransSeleniumApi(SeleniumApi):
             'url_temp': 'https://translate.google.cn/?sl={src}&tl={dst}',
             'src_sel': 'textarea',
             'dst_sel': 'html>body>c-wiz>div>div:nth-of-type(2)>c-wiz>div:nth-of-type(2)>c-wiz>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)>c-wiz:nth-of-type(2)>div:nth-of-type(5)>div>div:nth-of-type(1)>span:nth-of-type(1)',
+            'dst_attr': 'innerText',
         }
 
 def main():

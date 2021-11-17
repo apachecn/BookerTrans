@@ -11,6 +11,7 @@ class YoudaoTransSeleniumApi(SeleniumApi):
             'url_temp': 'http://fanyi.youdao.com/',
             'src_sel': '#inputOriginal',
             'dst_sel': '#transTarget',
+            'dst_attr': 'innerText',
         }
 
 def main():
