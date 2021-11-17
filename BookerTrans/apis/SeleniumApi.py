@@ -26,7 +26,7 @@ class SeleniumApi:
         
     def __init__(self):
         options = Options()
-        # options.add_argument('--headless')
+        options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument('--log-level=3')
         self._driver = webdriver.Chrome(options=options)
