@@ -31,6 +31,11 @@ class SeleniumApi:
         self._driver = webdriver.Chrome(options=options)
         self.load_page('auto', 'zh-CN')
 
+    @staticmethod
+    def wait_trans_callback(dvr):
+        el_dst = dvr.find_element_by_css_selector(settings['dst_text'])
+        return el_dst is not None and el_dst.text != ""
+
     def translate(self, s, src='auto', dst='zh-CN'):
         if re.search(r'^\s*$', s): return ""
         settings = self.get_settings()
@@ -39,15 +44,11 @@ class SeleniumApi:
         el_src = self._driver \
             .find_element_by_css_selector(settings['src_text'])
         el_src.clear()
-        def wait_clear_callback(dvr):
-            el_dst = dvr.find_element_by_css_selector(settings['dst_text'])
-            return el_dst is None
-        WebDriverWait(driver, settings['wait_sec']).until(wait_clear_callback)
+        WebDriverWait(driver, settings['wait_sec']) \
+            .until(lambda x: not SeleniumApi.wait_trans_callback(x))
         el_src.send_keys(s)
-        def wait_trans_callback(dvr):
-            el_dst = dvr.find_element_by_css_selector(settings['dst_text'])
-            return el_dst is not None and el_dst.text != ""
-        WebDriverWait(driver, settings['wait_sec']).until(wait_trans_callback)
+        WebDriverWait(driver, settings['wait_sec']) \
+            .until(SeleniumApi.wait_trans_callback)
         el_dst = self._driver \
             .find_element_by_css_selector(settings['dst_text'])
         return el_dst.text
