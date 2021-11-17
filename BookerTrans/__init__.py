@@ -6,6 +6,7 @@ from os import path
 from pyquery import PyQuery as pq
 from .apis import apis
 from . import config
+import traceback
 
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"
@@ -78,7 +79,7 @@ def trans_real(src):
             time.sleep(config.wait_sec)
             if dst: break
         except Exception as ex:
-            print(ex)
+            traceback.print_exc()
             time.sleep(config.wait_sec)
     
     if not dst: return None
