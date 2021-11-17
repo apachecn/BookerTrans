@@ -11,6 +11,7 @@ class BaiTransSeleniumApi(SeleniumApi):
             'default_url': 'https://fanyi.baidu.com/#auto/zh-CN',
             'url_temp': 'https://fanyi.baidu.com/#{src}/{dst}',
             'src_sel': 'textarea.textarea',
+            'src_attr': 'value',
             'dst_sel': 'p.target-output',
             'dst_attr': 'innerText',
         }

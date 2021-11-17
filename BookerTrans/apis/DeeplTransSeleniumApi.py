@@ -11,6 +11,7 @@ class DeeplTransSeleniumApi(SeleniumApi):
             'default_url': 'https://www.deepl.com/translator#en/zh-CN/',
             'url_temp': 'https://www.deepl.com/translator#{src}/{dst}/',
             'src_sel': '.lmt__source_textarea',
+            'src_attr': 'value',
             'dst_sel': '#target-dummydiv',
             'dst_attr': 'innerHTML',
         }

@@ -10,6 +10,7 @@ class SoTransSeleniumApi(SeleniumApi):
         return {
             'url_temp': 'https://fanyi.sogou.com/text?transfrom={src}&transto={dst}',
             'src_sel': '#trans-input',
+            'src_attr': 'value',
             'dst_sel': '#trans-result',
             'dst_attr': 'innerText',
         }

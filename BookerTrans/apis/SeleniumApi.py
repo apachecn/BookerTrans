@@ -14,6 +14,7 @@ class SeleniumApi:
         return {
             'url_temp': '',
             'src_sel': '',
+            'src_attr': 'value',
             'dst_sel': '',
             'dst_attr': 'innerText',
         }
@@ -45,19 +46,32 @@ class SeleniumApi:
         settings = self.get_settings()
         if self._lang != (src, dst):
             self.load_page(src, dst)
-        el_src = self._driver \
-            .find_element_by_css_selector(settings['src_sel'])
-        el_src.clear()
-        self._driver.execute_script(f'''
-            var el_dst = document.querySelector('{settings['dst_sel']}')
-            if (el_dst) el_dst.innerText = ''
-        ''')
-        el_src.send_keys(s)
+        # 清除输入框
+        self._driver.execute_script('''
+            var el_src = document.querySelector(arguments[0])
+            el_src[arguments[1]] = ''
+            el_src.dispatchEvent(new Event('input', {bubbles: true}))
+        ''', settings['src_sel'], settings['src_attr'])
+        # 清除输出框
+        self._driver.execute_script('''
+            var el_dst = document.querySelector(arguments[0])
+            if (el_dst) el_dst[arguments[1]] = ''
+        ''', settings['dst_sel'], settings['dst_attr'])
+        # 输入待翻译文本
+        self._driver.execute_script('''
+            var el_src = document.querySelector(arguments[0])
+            el_src[arguments[1]] = arguments[2]
+            el_src.dispatchEvent(new Event('input', {bubbles: true}))
+        ''', settings['src_sel'], settings['src_attr'], s)
+        # 等待反应
         WebDriverWait(self._driver, SeleniumApi.WAIT_SEC) \
             .until(self.wait_trans_callback)
-        el_dst = self._driver \
-            .find_element_by_css_selector(settings['dst_sel'])
-        return el_dst.get_attribute(settings['dst_attr'])
+        # 获取结果
+        transed = self._driver.execute_script('''
+            var el_dst = document.querySelector(arguments[0])
+            return el_dst[arguments[1]]
+        ''', settings['dst_sel'], settings['dst_attr'])
+        return transed
 
     def __del__(self):
         self._driver.close()
