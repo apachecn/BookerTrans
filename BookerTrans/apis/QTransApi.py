@@ -17,7 +17,7 @@ class QTransApi:
         
     def reauth(self):
         j = requests.post(
-            'https://fanyi.qq.com/api/reauth1232f',
+            'https://fanyi.qq.com/api/reauth12f',
             headers=QTransApi.headers,
             proxies=self.proxy,
             timeout=self.timeout,
@@ -48,6 +48,8 @@ class QTransApi:
             proxies=self.proxy,
             timeout=self.timeout,
         ).json()
+        if j['errCode'] != 0:
+            raise Exception(j['errMsg'])
         return ' '.join([
             r['targetText'] 
             for r in j['translate']['records']
