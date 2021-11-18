@@ -29,7 +29,7 @@ class YoudaoTransApi:
  
     def translate(self, s, src='auto', dst='zh-CN'):
         salt = str(int(time.time()*1000)) +str(random.randint(0,9))
-        sign_str = "fanyideskweb" + s + salt + "n%A-rKaT5fb[Gy?;N5@Tj"
+        sign_str = "fanyideskweb" + s + salt + "Y2FYu%TNSbMCxc3t2u^XT"
         sign = md5(sign_str.encode("utf-8")).hexdigest()
  
         data = {
