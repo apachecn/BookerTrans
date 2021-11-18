@@ -8,7 +8,7 @@ from ..config import config
 
 class SeleniumApi:
 
-    WAIT_SEC = 10000000
+    WAIT_SEC = 10
     
     def get_settings(self):
         return {
