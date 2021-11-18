@@ -54,7 +54,9 @@ class YoudaoTransApi:
             proxies=self.proxy,
             timeout=self.timeout,
         ).json()
-        return j["translateResult"][0][0]["tgt"]
+        return ' '.join([
+          x['tgt'] for x in j["translateResult"][0]
+        ])
  
 if __name__ == "__main__":
     api = YoudaoTransApi()
