@@ -10,9 +10,8 @@ class SoTransApi:
     headers = {
         'Origin': "https://fanyi.sogou.com",
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36",
-        'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8",
+        'Content-Type': "application/json;charset=UTF-8",
         'Accept': "application/json, text/plain, */*",
-        'X-Requested-With': "XMLHttpRequest",
         'Referer': "https://fanyi.sogou.com/text",
     }
  
@@ -40,12 +39,12 @@ class SoTransApi:
  
         j = requests.post(
             "https://fanyi.sogou.com/api/transpc/text/result", 
-            data=data, 
+            json=data, 
             headers=SoTransApi.headers,
             proxies=self.proxy,
             timeout=self.timeout,
         ).json()
-        if j['info'] != 'success':
+        if j['data']['translate']['errorCode'] != '0':
             raise Exception(json.dumps(j))
         return j['data']['translate']['dit']
  
