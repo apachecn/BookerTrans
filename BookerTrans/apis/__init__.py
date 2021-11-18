@@ -7,6 +7,7 @@ from .BaiTransApi import BaiTransApi
 from .YoudaoTransApi import YoudaoTransApi
 from .QTransApi import QTransApi
 from .BingTransApi import BingTransApi
+from .DeeplTransSeleniumApi import DeeplTransSeleniumApi
 
 apis = {
     'google': GoTransApi,
@@ -18,4 +19,5 @@ apis = {
     'youdao_selenium': YoudaoTransSeleniumApi,
     'qq': QTransApi,
     'bing': BingTransApi,
+    'deepl': DeeplTransSeleniumApi,
 }

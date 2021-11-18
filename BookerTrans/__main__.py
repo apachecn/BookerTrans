@@ -3,7 +3,8 @@
 import os
 from os import path
 from argparse import ArgumentParser
-from . import trans_html, config, api, __version__, load_api, get_api, apis
+from . import trans_html, api, __version__, load_api, get_api, apis
+from .config import config
 
 is_html = lambda f: f.endswith('.html') or \
                     f.endswith('.htm') or \
@@ -38,7 +39,14 @@ def main():
     parser.add_argument('-r', '--retry', type=int, default=10, help='count of retrying')
     parser.add_argument('-s', '--src', default='auto', help='src language')
     parser.add_argument('-d', '--dst', default='zh-CN', help='dest language')
+    parser.add_argument('-D', '--debug', action='store_true', help='debug mode')
     args = parser.parse_args()
+    
+    config['wait_sec'] = args.wait_sec
+    config['retry'] = args.retry
+    config['src'] = args.src
+    config['dst'] = args.dst
+    config['debug'] = args.debug
     
     load_api(args.site)
     api = get_api()
@@ -49,10 +57,6 @@ def main():
     api.host = args.host
     api.proxy = args.proxy
     api.timeout = args.timeout
-    config.wait_sec = args.wait_sec
-    config.retry = args.retry
-    config.src = args.src
-    config.dst = args.dst
 
     if path.isdir(args.fname):
         process_dir(args.fname)
