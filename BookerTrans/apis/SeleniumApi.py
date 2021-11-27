@@ -49,6 +49,7 @@ class SeleniumApi:
         settings = self.get_settings()
         # if self._lang != (src, dst):
         self.load_page(src, dst)
+        self._driver.refresh()
         # 清除输入框
         # self._driver.execute_script('''
             # var el_src = document.querySelector(arguments[0])
