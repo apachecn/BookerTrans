@@ -73,8 +73,10 @@ class SeleniumApi:
             .until(self.wait_trans_callback)
         # 获取结果
         transed = self._driver.execute_script('''
-            var el_dst = document.querySelector(arguments[0])
-            return el_dst[arguments[1]]
+            var el_dst = document.querySelectorAll(arguments[0])
+            return Array.from(el_dst)
+                .map(x => x[arguments[1]])
+                .join(' ')
         ''', settings['dst_sel'], settings['dst_attr'])
         return transed
 
