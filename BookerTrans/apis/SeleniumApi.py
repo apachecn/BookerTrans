@@ -47,19 +47,19 @@ class SeleniumApi:
     def translate(self, s, src='auto', dst='zh-CN'):
         if re.search(r'^\s*$', s): return ""
         settings = self.get_settings()
-        if self._lang != (src, dst):
-            self.load_page(src, dst)
+        # if self._lang != (src, dst):
+        self.load_page(src, dst)
         # 清除输入框
-        self._driver.execute_script('''
-            var el_src = document.querySelector(arguments[0])
-            el_src[arguments[1]] = ''
-            el_src.dispatchEvent(new Event('input', {bubbles: true}))
-        ''', settings['src_sel'], settings['src_attr'])
+        # self._driver.execute_script('''
+            # var el_src = document.querySelector(arguments[0])
+            # el_src[arguments[1]] = ''
+            # el_src.dispatchEvent(new Event('input', {bubbles: true}))
+        # ''', settings['src_sel'], settings['src_attr'])
         # 清除输出框
-        self._driver.execute_script('''
-            var el_dst = document.querySelector(arguments[0])
-            if (el_dst) el_dst[arguments[1]] = ''
-        ''', settings['dst_sel'], settings['dst_attr'])
+        # self._driver.execute_script('''
+            # var el_dst = document.querySelector(arguments[0])
+            # if (el_dst) el_dst[arguments[1]] = ''
+        # ''', settings['dst_sel'], settings['dst_attr'])
         # 输入待翻译文本
         self._driver.execute_script('''
             var el_src = document.querySelector(arguments[0])
