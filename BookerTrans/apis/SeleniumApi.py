@@ -29,10 +29,11 @@ class SeleniumApi:
         
     def __init__(self):
         options = Options()
-        if not config['debug']:
+        if config['debug']:
+            options.add_argument('--log-level=3')
+        else:
             options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        options.add_argument('--log-level=3')
+            options.add_argument('--disable-gpu')
         self._driver = webdriver.Chrome(options=options)
         self.load_page('auto', 'zh-CN')
 
@@ -49,6 +50,7 @@ class SeleniumApi:
         settings = self.get_settings()
         # if self._lang != (src, dst):
         self.load_page(src, dst)
+        self._driver.refresh()
         # 清除输入框
         # self._driver.execute_script('''
             # var el_src = document.querySelector(arguments[0])
