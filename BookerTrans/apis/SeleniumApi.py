@@ -51,6 +51,7 @@ class SeleniumApi:
         if re.search(r'^\s*$', s): return ""
         settings = self.get_settings()
         # if self._lang != (src, dst):
+        self._driver.delete_all_cookies()
         self.load_page(src, dst)
         self._driver.refresh()
         # 清除输入框
