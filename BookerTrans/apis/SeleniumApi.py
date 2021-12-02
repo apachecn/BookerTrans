@@ -29,11 +29,12 @@ class SeleniumApi:
         
     def __init__(self):
         options = Options()
+        options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
         if config['debug']:
             options.add_argument('--log-level=3')
         else:
             options.add_argument('--headless')
-            options.add_argument('--disable-gpu')
             options.add_argument('--log-level=0')
         self._driver = webdriver.Chrome(options=options)
         self.load_page('auto', 'zh-CN')
