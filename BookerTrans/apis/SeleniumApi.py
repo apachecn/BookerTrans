@@ -43,7 +43,7 @@ class SeleniumApi:
         self._driver = webdriver.Chrome(options=options)
         # StealthJS
         stealth = open(d('stealth.min.js')).read()
-        driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+        self._driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
             "source": stealth
         })
         self.load_page('auto', 'zh-CN')
