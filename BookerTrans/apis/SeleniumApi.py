@@ -4,7 +4,13 @@ from selenium.webdriver.support.wait import WebDriverWait
 import time
 import sys
 import re
+from os import path
 from ..config import config
+
+DIR = path.dirname(path.abspath(__file__))
+
+def d(name):
+    return path.join(DIR, name)
 
 class SeleniumApi:
 
@@ -35,6 +41,11 @@ class SeleniumApi:
             options.add_argument('--headless')
             options.add_argument('--log-level=3')
         self._driver = webdriver.Chrome(options=options)
+        # StealthJS
+        stealth = open(d('stealth.min.js')).read()
+        driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+            "source": stealth
+        })
         self.load_page('auto', 'zh-CN')
 
     def wait_trans_callback(self, dvr):
