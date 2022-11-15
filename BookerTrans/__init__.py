@@ -169,7 +169,7 @@ def preprocess(html):
     for c in codes:
         c = pq(c)
         newc = pq('<code></code>')
-        newc.append(c.text)
+        newc.append(c.text())
         c.replace_with(newc)
         
     return str(root)
