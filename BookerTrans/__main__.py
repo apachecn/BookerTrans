@@ -5,6 +5,7 @@ from os import path
 from argparse import ArgumentParser
 import threading
 import traceback
+import copy
 from concurrent.futures import ThreadPoolExecutor
 from . import trans_html, __version__
 from .apis import apis
