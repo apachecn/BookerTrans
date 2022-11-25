@@ -115,7 +115,7 @@ def trans_html(api, html):
         elem = pq(elem)
         if elem.children('p'): continue
         to_trans = elem.html()
-        trans = trans_one(to_trans)
+        trans = trans_one(api, to_trans)
         if not trans: continue
         elem.html(trans)
     
@@ -132,7 +132,7 @@ def trans_html(api, html):
         if sub_list: sub_list.remove()
         
         to_trans = elem.html()
-        trans = trans_one(to_trans)
+        trans = trans_one(api, to_trans)
         if not trans: continue
         elem.html(trans)
         
