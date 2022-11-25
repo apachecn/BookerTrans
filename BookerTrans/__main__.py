@@ -39,11 +39,16 @@ def process_file(args):
 def process_dir(args):
     dir = args.fname
     files = [f for f in os.listdir(dir) if is_html(f)]
+    pool = ThreadPoolExecutor(args.threads)
+    hdls = []
     for f in files:
         f = path.join(dir, f)
         args = copy.deepcopy(args)
         args.fname = f
-        process_file_safe(args)
+        # process_file_safe(args)
+        h = pool.submit(process_file_safe, args)
+        hdls.append(h)
+    for h in hdls: h.result()
 
 def load_api(args):
     api = apis[args.site]()
