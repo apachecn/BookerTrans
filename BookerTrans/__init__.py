@@ -17,14 +17,6 @@ RE_CODE = r'<(pre|code|tt|var|kbd)[^>]*?>[\s\S]*?</\1>'
 RE_TAG = r'<[^>]*?>'
 RE_ENTITY = r'&(\w+|#x?\d+);'
 
-api = None
-
-def load_api(site):
-    global api
-    api = apis[site]()
-    
-def get_api():
-    return api
 
 def tags_preprocess(html):
 
@@ -64,7 +56,7 @@ def tags_recover(html, tags):
         
     return html
 
-def trans_real(src):
+def trans_real(api, src):
 
     dst = None
     for i in range(config['retry']):
@@ -89,7 +81,7 @@ def trans_real(src):
     dst = re.sub(r'\[\s*T\s*(\d+)\s*\]', r'【T\1】', dst, flags=re.I)
     return dst
 
-def trans_one(html):
+def trans_one(api, html):
     if html is None or html.strip() == '':
         return ''
     
@@ -97,14 +89,14 @@ def trans_one(html):
     html, tokens = tags_preprocess(html)
     
     # 按句子翻译
-    html = trans_real(html)
+    html = trans_real(api, html)
     if not html: return None
     
     # 标签还原
     html = tags_recover(html, tokens)
     return html
 
-def trans_html(html):
+def trans_html(api, html):
     # 预处理
     html = preprocess(html)
     root = pq(html)
@@ -114,7 +106,7 @@ def trans_html(html):
     for elem in elems:
         elem = pq(elem)
         to_trans = elem.html()
-        trans = trans_one(to_trans)
+        trans = trans_one(api, to_trans)
         if not trans: continue
         elem.html(trans)
         

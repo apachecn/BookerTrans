@@ -3,29 +3,49 @@
 import os
 from os import path
 from argparse import ArgumentParser
-from . import trans_html, api, __version__, load_api, get_api, apis
+import threding
+from . import trans_html, __version__
+from .apis import apis
 from .config import config
+
+trlocal = threading.local()
 
 is_html = lambda f: f.endswith('.html') or \
                     f.endswith('.htm') or \
                     f.endswith('.xhtml')
 
-def process_file(fname):
+def process_file(args):
+    fname = args.fname
     if not is_html(fname):
         print(f'{fname} is not a html file')
         return
+        
+    if not hasattr(trlocal, 'api'):
+        trlocal.api = load_api()
+    api = trlocal.api
     
     print(fname)
     html = open(fname, encoding='utf-8').read()
-    html = trans_html(html)
+    html = trans_html(api, html)
     with open(fname, 'w', encoding='utf-8') as f:
         f.write(html)
 
-def process_dir(dir):
+def process_dir(args):
+    dir = args.fname
     files = [f for f in os.listdir(dir) if is_html(f)]
     for f in files:
         f = path.join(dir, f)
         process_file(f)
+
+def load_api(args):
+    api = apis[args.site]()
+    if args.proxy:
+        p = args.proxy
+        args.proxy = {'http': p, 'https': p}
+    api.host = args.host
+    api.proxy = args.proxy
+    api.timeout = args.timeout
+    return api
 
 def main():
     parser = ArgumentParser(prog="BookerTrans", description="HTML Translator with Google Api for iBooker/ApacheCN")
@@ -47,20 +67,10 @@ def main():
     config['src'] = args.src
     config['dst'] = args.dst
     config['debug'] = args.debug
-    
-    load_api(args.site)
-    api = get_api()
-    
-    if args.proxy:
-        p = args.proxy
-        args.proxy = {'http': p, 'https': p}
-    api.host = args.host
-    api.proxy = args.proxy
-    api.timeout = args.timeout
 
     if path.isdir(args.fname):
-        process_dir(args.fname)
+        process_dir(args)
     else:
-        process_file(args.fname)
+        process_file(args)
         
 if __name__ == '__main__': main()
