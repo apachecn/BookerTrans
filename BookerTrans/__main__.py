@@ -3,7 +3,7 @@
 import os
 from os import path
 from argparse import ArgumentParser
-import threding
+import threading
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 from . import trans_html, __version__
