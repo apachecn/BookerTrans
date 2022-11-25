@@ -47,9 +47,6 @@ def process_dir(args):
 
 def load_api(args):
     api = apis[args.site]()
-    if args.proxy:
-        p = args.proxy
-        args.proxy = {'http': p, 'https': p}
     api.host = args.host
     api.proxy = args.proxy
     api.timeout = args.timeout
@@ -70,6 +67,10 @@ def main():
     parser.add_argument('-d', '--dst', default='zh-CN', help='dest language')
     parser.add_argument('-D', '--debug', action='store_true', help='debug mode')
     args = parser.parse_args()
+    
+    if args.proxy:
+        p = args.proxy
+        args.proxy = {'http': p, 'https': p}
     
     config['wait_sec'] = args.wait_sec
     config['retry'] = args.retry
