@@ -35,7 +35,9 @@ def process_dir(args):
     files = [f for f in os.listdir(dir) if is_html(f)]
     for f in files:
         f = path.join(dir, f)
-        process_file(f)
+        args = copy.deepcopy(args)
+        args.fname = f
+        process_file(args)
 
 def load_api(args):
     api = apis[args.site]()
