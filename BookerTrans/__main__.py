@@ -28,7 +28,7 @@ def process_file(args):
         return
         
     if not hasattr(trlocal, 'api'):
-        trlocal.api = load_api()
+        trlocal.api = load_api(args)
     api = trlocal.api
     
     print(fname)
