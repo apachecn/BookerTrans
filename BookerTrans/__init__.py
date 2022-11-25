@@ -4,7 +4,6 @@ import re
 import time
 from os import path
 from pyquery import PyQuery as pq
-from .apis import apis
 from .config import config
 import traceback
 

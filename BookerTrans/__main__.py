@@ -4,6 +4,7 @@ import os
 from os import path
 from argparse import ArgumentParser
 import threding
+import traceback
 from . import trans_html, __version__
 from .apis import apis
 from .config import config
@@ -13,6 +14,10 @@ trlocal = threading.local()
 is_html = lambda f: f.endswith('.html') or \
                     f.endswith('.htm') or \
                     f.endswith('.xhtml')
+
+def process_file_safe(args):
+    try: process_file(args)
+    except: traceback.print_exc()
 
 def process_file(args):
     fname = args.fname
@@ -37,7 +42,7 @@ def process_dir(args):
         f = path.join(dir, f)
         args = copy.deepcopy(args)
         args.fname = f
-        process_file(args)
+        process_file_safe(args)
 
 def load_api(args):
     api = apis[args.site]()
