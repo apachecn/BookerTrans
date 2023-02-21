@@ -187,8 +187,8 @@ def process_dir(args):
     dir = args.fname
     files = [
         path.join(base, f) 
-        for f in fnames 
         for base, _, fnames in os.walk(dir) 
+        for f in fnames 
         if is_html(f)
     ]
     for f in files:
