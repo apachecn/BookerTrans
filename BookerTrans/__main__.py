@@ -128,9 +128,9 @@ def ext_to_trans(elems):
         if elem.children('ol'): sub_list = elem.children('ol')
         if sub_list: sub_list.remove()
         htmls.append(
-            elem.html()
-            .replace('\r', '')
-            .replace('\n', ' ')
+            (elem.html() or '')
+                .replace('\r', '')
+                .replace('\n', ' ')
         )
         subs.append(sub_list)
     return htmls, subs
