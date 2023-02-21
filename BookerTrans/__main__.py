@@ -83,6 +83,7 @@ def trans_real(api, src):
     dst = re.sub(r'\[\s*T\s*(\d+)\s*\]', r'【T\1】', dst, flags=re.I)
     return dst
 
+@safe()
 def trans_one(api, html):
     if html is None or html.strip() == '':
         return ''
@@ -168,10 +169,7 @@ def preprocess(html):
         
     return str(root)
 
-def process_file_safe(args):
-    try: process_file(args)
-    except: traceback.print_exc()
-
+@safe()
 def process_file(args):
     fname = args.fname
     if not is_html(fname):
@@ -198,7 +196,7 @@ def process_dir(args):
         args = copy.deepcopy(args)
         args.fname = f
         # process_file_safe(args)
-        h = pool.submit(process_file_safe, args)
+        h = pool.submit(process_file, args)
         hdls.append(h)
     for h in hdls: h.result()
 
