@@ -101,7 +101,7 @@ def trans_one(args, htmls, i):
         return
     # 标签还原
     html = tags_recover(html, tokens)
-    html[i] = html
+    htmls[i] = html
 
 def preprocess(html):
     html = re.sub(r'<\?xml[^>]*\?>', '', html)
