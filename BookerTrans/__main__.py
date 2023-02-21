@@ -20,6 +20,7 @@ RE_TAG = r'<[^>]*?>'
 RE_ENTITY = r'&(\w+|#x?\d+);'
 
 trlocal = threading.local()
+pool = None
 
 def tags_preprocess(html):
 
@@ -166,7 +167,6 @@ def process_file(args):
     htmls, subs = ext_to_trans(elems)
     htmls = group_to_trans(htmls)
     # 多线程翻译
-    pool = ThreadPoolExecutor(args.threads)
     hdls = []
     for i, to_trans in enumerate(htmls):
         if not to_trans: continue
@@ -185,9 +185,13 @@ def process_file(args):
 
 def process_dir(args):
     dir = args.fname
-    files = [f for f in os.listdir(dir) if is_html(f)]
+    files = [
+        path.join(base, f) 
+        for f in fnames 
+        for base, _, fnames in os.walk(dir) 
+        if is_html(f)
+    ]
     for f in files:
-        f = path.join(dir, f)
         # args = copy.deepcopy(args)
         args.fname = f
         process_file(args)
@@ -203,6 +207,8 @@ def load_api(args):
     return api
 
 def main():
+    global pool
+    
     parser = ArgumentParser(prog="BookerTrans", description="HTML Translator with Google Api for iBooker/ApacheCN")
     parser.add_argument('site', help='translate api', choices=apis.keys())
     parser.add_argument('fname', help="html file name or dir name")
@@ -227,7 +233,8 @@ def main():
     config['src'] = args.src
     config['dst'] = args.dst
     config['debug'] = args.debug
-
+    pool = ThreadPoolExecutor(args.threads)
+    
     if path.isdir(args.fname):
         process_dir(args)
     else:
