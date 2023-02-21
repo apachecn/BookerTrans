@@ -84,90 +84,31 @@ def trans_real(api, src):
     return dst
 
 @safe()
-def trans_one(api, html):
+def trans_one(html, callback):
     if html is None or html.strip() == '':
-        return ''
-    
+        callback('')
+        return
+    # 初始化 API
+    if not hasattr(trlocal, 'api'):
+        trlocal.api = load_api(args)
+    api = trlocal.api
     # 标签预处理
     html, tokens = tags_preprocess(html)
-    
     # 按句子翻译
     html = trans_real(api, html)
-    if not html: return None
-    
+    if not html: 
+        callback(None)
+        return
     # 标签还原
     html = tags_recover(html, tokens)
-    return html
-
-def trans_html(api, html):
-    # 预处理
-    html = preprocess(html)
-    root = pq(html)
-    
-    # 处理 <p> <h?>
-    elems = root('p, h1, h2, h3, h4, h5, h6')
-    for elem in elems:
-        elem = pq(elem)
-        to_trans = elem.html()
-        trans = trans_one(api, to_trans)
-        if not trans: continue
-        elem.html(trans)
-        
-    # 处理 <blockquote> <td> <th>
-    elems = root('blockquote, td, th')
-    for elem in elems:
-        elem = pq(elem)
-        if elem.children('p'): continue
-        to_trans = elem.html()
-        trans = trans_one(api, to_trans)
-        if not trans: continue
-        elem.html(trans)
-    
-    # 处理 <li>
-    elems = root('li')
-    for elem in elems:
-        elem = pq(elem)
-        if elem.children('p'): continue
-        
-        # 如果有子列表，就取下来
-        sub_list = None
-        if elem.children('ul'): sub_list = elem.children('ul')
-        if elem.children('ol'): sub_list = elem.children('ol')
-        if sub_list: sub_list.remove()
-        
-        to_trans = elem.html()
-        trans = trans_one(api, to_trans)
-        if not trans: continue
-        elem.html(trans)
-        
-        # 将子列表还原
-        if sub_list: elem.append(sub_list)
-    
-    return str(root)
+    callback(html)
 
 def preprocess(html):
     html = re.sub(r'<\?xml[^>]*\?>', '', html)
     html = re.sub(r'xmlns=".+?"', '', html)
     html = html.replace('&#160;', ' ') \
                .replace('&nbsp;', ' ')
-
-    root = pq(html)
-    
-    pres = root('div.code, div.Code')
-    for p in pres:
-        p = pq(p)
-        newp = pq('<pre></pre>')
-        newp.append(p.text())
-        p.replace_with(newp)
-        
-    codes = root('span.inline-code, span.CodeInline')
-    for c in codes:
-        c = pq(c)
-        newc = pq('<code></code>')
-        newc.append(c.text())
-        c.replace_with(newc)
-        
-    return str(root)
+    return html
 
 @safe()
 def process_file(args):
@@ -175,30 +116,66 @@ def process_file(args):
     if not is_html(fname):
         print(f'{fname} is not a html file')
         return
-        
-    if not hasattr(trlocal, 'api'):
-        trlocal.api = load_api(args)
-    api = trlocal.api
-    
     print(fname)
     html = open(fname, encoding='utf-8').read()
-    html = trans_html(api, html)
+    pool = ThreadPoolExecutor(args.threads)
+    hdls = []
+    # 预处理
+    html = preprocess(html)
+    root = pq(html)
+    # 处理 <p> <h?>
+    elems = root('p, h1, h2, h3, h4, h5, h6')
+    for elem in elems:
+        elem = pq(elem)
+        to_trans = elem.html()
+        trans_one(
+            to_trans, 
+            lambda t: elem.html(t) if t else None
+        )
+    # 处理 <blockquote> <td> <th>
+    elems = root('blockquote, td, th')
+    for elem in elems:
+        elem = pq(elem)
+        if elem.children('p'): continue
+        to_trans = elem.html()
+        trans_one(
+            to_trans, 
+            lambda t: elem.html(t) if t else None,
+        )
+    # 处理 <li>
+    elems = root('li')
+    for elem in elems:
+        elem = pq(elem)
+        if elem.children('p'): continue
+        # 如果有子列表，就取下来
+        sub_list = None
+        if elem.children('ul'): sub_list = elem.children('ul')
+        if elem.children('ol'): sub_list = elem.children('ol')
+        if sub_list: sub_list.remove()
+        to_trans = elem.html()
+        trans_one(
+            to_trans, 
+            lambda t: (
+                elem.html(t) if t else None,
+                elem.append(sub_list) if sub_list else None,
+            ),
+        )
+    for h in hdls: h.result()
+    html = str(root)
     with open(fname, 'w', encoding='utf-8') as f:
         f.write(html)
 
 def process_dir(args):
     dir = args.fname
     files = [f for f in os.listdir(dir) if is_html(f)]
-    pool = ThreadPoolExecutor(args.threads)
-    hdls = []
     for f in files:
         f = path.join(dir, f)
-        args = copy.deepcopy(args)
+        # args = copy.deepcopy(args)
         args.fname = f
-        # process_file_safe(args)
-        h = pool.submit(process_file, args)
-        hdls.append(h)
-    for h in hdls: h.result()
+        process_file(args)
+        # h = pool.submit(process_file, args)
+        # hdls.append(h)
+    # for h in hdls: h.result()
 
 def load_api(args):
     api = apis[args.site]()
