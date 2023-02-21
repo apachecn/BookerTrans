@@ -8,6 +8,7 @@ from argparse import ArgumentParser
 import threading
 import traceback
 import copy
+from operator import setitem
 from concurrent.futures import ThreadPoolExecutor
 from . import __version__
 from .apis import apis
@@ -118,53 +119,44 @@ def process_file(args):
         return
     print(fname)
     html = open(fname, encoding='utf-8').read()
-    pool = ThreadPoolExecutor(args.threads)
-    hdls = []
     # 预处理
     html = preprocess(html)
     root = pq(html)
-    # 处理 <p> <h?>
-    elems = root('p, h1, h2, h3, h4, h5, h6')
+    # 标签到待翻译文本
+    elems = root('p, h1, h2, h3, h4, h5, h6, blockquote, td, th')
+    htmls = []
+    subs = []
     for elem in elems:
         elem = pq(elem)
-        to_trans = elem.html()
-        h = pool.submit(
-            trans_one, args, to_trans, 
-            lambda t: elem.html(t) if t else None,
-        )
-        hdls.append(h)
-    # 处理 <blockquote> <td> <th>
-    elems = root('blockquote, td, th')
-    for elem in elems:
-        elem = pq(elem)
-        if elem.children('p'): continue
-        to_trans = elem.html()
-        h = pool.submit(
-            trans_one, args, to_trans, 
-            lambda t: elem.html(t) if t else None,
-        )
-        hdls.append(h)
-    # 处理 <li>
-    elems = root('li')
-    for elem in elems:
-        elem = pq(elem)
-        if elem.children('p'): continue
+        if elem.children('p'): 
+            htmls.append(None)
+            subs.append(None)
+            continue
         # 如果有子列表，就取下来
         sub_list = None
         if elem.children('ul'): sub_list = elem.children('ul')
         if elem.children('ol'): sub_list = elem.children('ol')
         if sub_list: sub_list.remove()
-        to_trans = elem.html()
+        htmls.append(elem.html())
+        subs.append(sub_list)
+    # 多线程翻译
+    pool = ThreadPoolExecutor(args.threads)
+    hdls = []
+    for i, to_trans in enumerate(htmls):
+        if not to_trans: continue
         h = pool.submit(
             trans_one, args, to_trans, 
-            lambda t: (
-                elem.html(t) if t else None,
-                elem.append(sub_list) if sub_list else None,
-            ),
+            lambda t: setitem(htmls, i, to_trans),
         )
         hdls.append(h)
     for h in hdls: h.result()
+    # 回写翻译结果
+    for i, (h, s) in enumerate(zip(htmls, subs)):
+        if not h: continue
+        elems.eq(i).html(h)
+        if s: elems.eq(i).append(s)
     html = str(root)
+    print(html)
     with open(fname, 'w', encoding='utf-8') as f:
         f.write(html)
 
