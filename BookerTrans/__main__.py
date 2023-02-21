@@ -128,20 +128,22 @@ def process_file(args):
     for elem in elems:
         elem = pq(elem)
         to_trans = elem.html()
-        trans_one(
-            args, to_trans, 
-            lambda t: elem.html(t) if t else None
+        h = pool.submit(
+            trans_one, args, to_trans, 
+            lambda t: elem.html(t) if t else None,
         )
+        hdls.append(h)
     # 处理 <blockquote> <td> <th>
     elems = root('blockquote, td, th')
     for elem in elems:
         elem = pq(elem)
         if elem.children('p'): continue
         to_trans = elem.html()
-        trans_one(
-            args, to_trans, 
+        h = pool.submit(
+            trans_one, args, to_trans, 
             lambda t: elem.html(t) if t else None,
         )
+        hdls.append(h)
     # 处理 <li>
     elems = root('li')
     for elem in elems:
@@ -153,13 +155,14 @@ def process_file(args):
         if elem.children('ol'): sub_list = elem.children('ol')
         if sub_list: sub_list.remove()
         to_trans = elem.html()
-        trans_one(
-            args, to_trans, 
+        h = pool.submit(
+            trans_one, args, to_trans, 
             lambda t: (
                 elem.html(t) if t else None,
                 elem.append(sub_list) if sub_list else None,
             ),
         )
+        hdls.append(h)
     for h in hdls: h.result()
     html = str(root)
     with open(fname, 'w', encoding='utf-8') as f:
