@@ -47,8 +47,8 @@ def tags_preprocess(html):
     html = re.sub(RE_ENTITY, replace_func, html)
     
     # 去掉 Unix 和 Windows 换行
-    html = html.replace('\n', ' ')
-    html = html.replace('\r', '')
+    # html = html.replace('\n', ' ')
+    # html = html.replace('\r', '')
     return html, tags
 
 def tags_recover(html, tags):
@@ -127,10 +127,28 @@ def ext_to_trans(elems):
         if elem.children('ul'): sub_list = elem.children('ul')
         if elem.children('ol'): sub_list = elem.children('ol')
         if sub_list: sub_list.remove()
-        htmls.append(elem.html())
+        htmls.append(
+            elem.html()
+            .replace('\r', '')
+            .replace('\n', ' ')
+        )
         subs.append(sub_list)
     return htmls, subs
 
+def group_to_trans(htmls):
+    res = []
+    for h in htmls:
+        if not len(res) or \
+            sum(len(s) for s in res[-1]) + len(h) > 5000:
+            res.append([h])
+        else:
+            res[-1].append(h)
+    return ['\n'.join(g) for g in res]
+    
+def split_transed(htmls):
+    res = [h.split('\n') for h in htmls]
+    return list(reduce(lambda x, y: x + y, res, []))
+    
 @safe()
 def process_file(args):
     fname = args.fname
@@ -145,6 +163,7 @@ def process_file(args):
     # 标签到待翻译文本
     elems = root('p, h1, h2, h3, h4, h5, h6, blockquote, td, th, li')
     htmls, subs = ext_to_trans(elems)
+    htmls = group_to_trans(htmls)
     # 多线程翻译
     pool = ThreadPoolExecutor(args.threads)
     hdls = []
@@ -154,6 +173,7 @@ def process_file(args):
         hdls.append(h)
     for h in hdls: h.result()
     # 回写翻译结果
+    htmls = split_transed(htmls)
     for i, (h, s) in enumerate(zip(htmls, subs)):
         if not h: continue
         elems.eq(i).html(h)
