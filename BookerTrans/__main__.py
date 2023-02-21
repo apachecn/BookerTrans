@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 import threading
 import traceback
 import copy
-from operator import setitem
+from functools import reduce
 from concurrent.futures import ThreadPoolExecutor
 from . import __version__
 from .apis import apis
