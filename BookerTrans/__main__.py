@@ -84,7 +84,7 @@ def trans_real(api, src):
     return dst
 
 @safe()
-def trans_one(html, callback):
+def trans_one(args, html, callback):
     if html is None or html.strip() == '':
         callback('')
         return
@@ -129,7 +129,7 @@ def process_file(args):
         elem = pq(elem)
         to_trans = elem.html()
         trans_one(
-            to_trans, 
+            args, to_trans, 
             lambda t: elem.html(t) if t else None
         )
     # 处理 <blockquote> <td> <th>
@@ -139,7 +139,7 @@ def process_file(args):
         if elem.children('p'): continue
         to_trans = elem.html()
         trans_one(
-            to_trans, 
+            args, to_trans, 
             lambda t: elem.html(t) if t else None,
         )
     # 处理 <li>
@@ -154,7 +154,7 @@ def process_file(args):
         if sub_list: sub_list.remove()
         to_trans = elem.html()
         trans_one(
-            to_trans, 
+            args, to_trans, 
             lambda t: (
                 elem.html(t) if t else None,
                 elem.append(sub_list) if sub_list else None,
