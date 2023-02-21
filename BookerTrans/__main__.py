@@ -162,6 +162,7 @@ def process_file(args):
     root = pq(html)
     # 标签到待翻译文本
     elems = root('p, h1, h2, h3, h4, h5, h6, blockquote, td, th, li')
+    elems = pq([e for e in elems if not pq(e).children('p')])
     htmls, subs = ext_to_trans(elems)
     htmls = group_to_trans(htmls)
     # 多线程翻译
