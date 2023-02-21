@@ -85,9 +85,10 @@ def trans_real(api, src):
     return dst
 
 @safe()
-def trans_one(args, html, callback):
+def trans_one(args, htmls, i):
+    html = htmls[i]
     if html is None or html.strip() == '':
-        return callback('')
+        return
     # 初始化 API
     if not hasattr(trlocal, 'api'):
         trlocal.api = load_api(args)
@@ -97,10 +98,10 @@ def trans_one(args, html, callback):
     # 按句子翻译
     html = trans_real(api, html)
     if not html: 
-        return callback(None)
+        return
     # 标签还原
     html = tags_recover(html, tokens)
-    return callback(html)
+    html[i] = html
 
 def preprocess(html):
     html = re.sub(r'<\?xml[^>]*\?>', '', html)
@@ -109,19 +110,7 @@ def preprocess(html):
                .replace('&nbsp;', ' ')
     return html
 
-@safe()
-def process_file(args):
-    fname = args.fname
-    if not is_html(fname):
-        print(f'{fname} is not a html file')
-        return
-    print(fname)
-    html = open(fname, encoding='utf-8').read()
-    # 预处理
-    html = preprocess(html)
-    root = pq(html)
-    # 标签到待翻译文本
-    elems = root('p, h1, h2, h3, h4, h5, h6, blockquote, td, th')
+def ext_to_trans(elems):
     htmls = []
     subs = []
     for elem in elems:
@@ -137,18 +126,30 @@ def process_file(args):
         if sub_list: sub_list.remove()
         htmls.append(elem.html())
         subs.append(sub_list)
+    return htmls, subs
+
+@safe()
+def process_file(args):
+    fname = args.fname
+    if not is_html(fname):
+        print(f'{fname} 不是 HTML 文件！')
+        return
+    print(fname)
+    html = open(fname, encoding='utf-8').read()
+    # 预处理
+    html = preprocess(html)
+    root = pq(html)
+    # 标签到待翻译文本
+    elems = root('p, h1, h2, h3, h4, h5, h6, blockquote, td, th')
+    htmls, subs = ext_to_trans(elems)
     # 多线程翻译
     pool = ThreadPoolExecutor(args.threads)
     hdls = []
     for i, to_trans in enumerate(htmls):
         if not to_trans: continue
-        h = pool.submit(
-            trans_one, args, to_trans, 
-            lambda t: setitem(htmls, i, t),
-        )
+        h = pool.submit(trans_one, args, htmls, i)
         hdls.append(h)
     for h in hdls: h.result()
-    print(htmls)
     # 回写翻译结果
     for i, (h, s) in enumerate(zip(htmls, subs)):
         if not h: continue
