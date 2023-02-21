@@ -87,8 +87,7 @@ def trans_real(api, src):
 @safe()
 def trans_one(args, html, callback):
     if html is None or html.strip() == '':
-        callback('')
-        return
+        return callback('')
     # 初始化 API
     if not hasattr(trlocal, 'api'):
         trlocal.api = load_api(args)
@@ -98,11 +97,10 @@ def trans_one(args, html, callback):
     # 按句子翻译
     html = trans_real(api, html)
     if not html: 
-        callback(None)
-        return
+        return callback(None)
     # 标签还原
     html = tags_recover(html, tokens)
-    callback(html)
+    return callback(html)
 
 def preprocess(html):
     html = re.sub(r'<\?xml[^>]*\?>', '', html)
@@ -146,17 +144,17 @@ def process_file(args):
         if not to_trans: continue
         h = pool.submit(
             trans_one, args, to_trans, 
-            lambda t: setitem(htmls, i, to_trans),
+            lambda t: setitem(htmls, i, t),
         )
         hdls.append(h)
     for h in hdls: h.result()
+    print(htmls)
     # 回写翻译结果
     for i, (h, s) in enumerate(zip(htmls, subs)):
         if not h: continue
         elems.eq(i).html(h)
         if s: elems.eq(i).append(s)
     html = str(root)
-    print(html)
     with open(fname, 'w', encoding='utf-8') as f:
         f.write(html)
 
