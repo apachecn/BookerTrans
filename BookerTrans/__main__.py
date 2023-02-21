@@ -89,6 +89,9 @@ def trans_one(args, htmls, i):
     html = htmls[i]
     if html is None or html.strip() == '':
         return
+    if not re.search(r'[A-Za-z]', html) or \
+        re.search(r'[\u4e00-\u9fff]', html):
+        return
     # 初始化 API
     if not hasattr(trlocal, 'api'):
         trlocal.api = load_api(args)
@@ -140,7 +143,7 @@ def process_file(args):
     html = preprocess(html)
     root = pq(html)
     # 标签到待翻译文本
-    elems = root('p, h1, h2, h3, h4, h5, h6, blockquote, td, th')
+    elems = root('p, h1, h2, h3, h4, h5, h6, blockquote, td, th, li')
     htmls, subs = ext_to_trans(elems)
     # 多线程翻译
     pool = ThreadPoolExecutor(args.threads)
