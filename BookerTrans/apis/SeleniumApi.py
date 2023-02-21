@@ -30,7 +30,6 @@ class SeleniumApi:
         self._driver.get(settings['url_temp']
             .replace('{src}', src)
             .replace('{dst}', dst))
-        self._driver.minimize_window()
         self._driver.implicitly_wait(SeleniumApi.WAIT_SEC)
         self._lang = (src, dst)
         
@@ -42,6 +41,7 @@ class SeleniumApi:
             options.add_argument('--headless')
             options.add_argument('--log-level=3')
         self._driver = webdriver.Chrome(options=options)
+        self._driver.minimize_window()
         # StealthJS
         stealth = open(d('stealth.min.js')).read()
         self._driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
