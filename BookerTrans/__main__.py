@@ -119,10 +119,6 @@ def ext_to_trans(elems):
     subs = []
     for elem in elems:
         elem = pq(elem)
-        if elem.children('p'): 
-            htmls.append(None)
-            subs.append(None)
-            continue
         # 如果有子列表，就取下来
         sub_list = None
         if elem.children('ul'): sub_list = elem.children('ul')
@@ -163,7 +159,11 @@ def process_file(args):
     root = pq(html)
     # 标签到待翻译文本
     elems = root('p, h1, h2, h3, h4, h5, h6, blockquote, td, th, li')
-    elems = pq([e for e in elems if not pq(e).children('p')])
+    elems = pq([
+        e for e in elems 
+        if not pq(e).children('p') and
+           not pq(e).has_class('translated')
+    ])
     htmls, subs = ext_to_trans(elems)
     htmls = group_to_trans(htmls, args.limit)
     # 多线程翻译
@@ -178,6 +178,7 @@ def process_file(args):
     for i, (h, s) in enumerate(zip(htmls, subs)):
         if not h: continue
         elems.eq(i).html(h)
+        elems.eq(i).add_class('translated')
         if s: elems.eq(i).append(s)
     html = str(root)
     with open(fname, 'w', encoding='utf-8') as f:
