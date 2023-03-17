@@ -117,6 +117,7 @@ def cont_transed(elem):
     if elem.children('ul'): sub_list = elem.children('ul')
     if elem.children('ol'): sub_list = elem.children('ol')
     if sub_list: sub_list.remove()
+    html = elem.html()
     transed = not re.search(r'[A-Za-z]', html) or \
         re.search(r'[\u4e00-\u9fff]', html)
     subs.append(sub_list)
