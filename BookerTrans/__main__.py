@@ -120,7 +120,7 @@ def cont_transed(elem):
     html = elem.html()
     transed = not re.search(r'[A-Za-z]', html) or \
         re.search(r'[\u4e00-\u9fff]', html)
-    subs.append(sub_list)
+    if sub_list: elems.eq(i).append(sub_list)
     return transed
 
 def ext_to_trans(elems):
