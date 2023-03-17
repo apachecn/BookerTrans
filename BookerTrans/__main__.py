@@ -232,7 +232,7 @@ def main():
     parser.add_argument('-s', '--src', default='auto', help='src language')
     parser.add_argument('-d', '--dst', default='zh-CN', help='dest language')
     parser.add_argument('-D', '--debug', action='store_true', help='debug mode')
-    parser.add_argument('-l', "--limit", type=int, default=5000, help='word count limit')
+    parser.add_argument('-l', "--limit", type=int, default=3000, help='word count limit')
     args = parser.parse_args()
     
     if args.proxy:
