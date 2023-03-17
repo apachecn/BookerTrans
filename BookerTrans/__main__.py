@@ -90,9 +90,6 @@ def trans_one(args, htmls, i):
     html = htmls[i]
     if html is None or html.strip() == '':
         return
-    if not re.search(r'[A-Za-z]', html) or \
-        re.search(r'[\u4e00-\u9fff]', html):
-        return
     # 初始化 API
     if not hasattr(trlocal, 'api'):
         trlocal.api = load_api(args)
@@ -113,6 +110,17 @@ def preprocess(html):
     html = html.replace('&#160;', ' ') \
                .replace('&nbsp;', ' ')
     return html
+
+def cont_transed(elem):
+    # 如果有子列表，就取下来
+    sub_list = None
+    if elem.children('ul'): sub_list = elem.children('ul')
+    if elem.children('ol'): sub_list = elem.children('ol')
+    if sub_list: sub_list.remove()
+    transed = not re.search(r'[A-Za-z]', html) or \
+        re.search(r'[\u4e00-\u9fff]', html)
+    subs.append(sub_list)
+    return transed
 
 def ext_to_trans(elems):
     htmls = []
@@ -162,7 +170,8 @@ def process_file(args):
     elems = pq([
         e for e in elems 
         if not pq(e).children('p') and
-           not pq(e).has_class('translated')
+           not pq(e).has_class('translated') and
+           not cont_transed(pq(e))
     ])
     htmls, subs = ext_to_trans(elems)
     htmls = group_to_trans(htmls, args.limit)
